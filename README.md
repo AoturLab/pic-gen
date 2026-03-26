@@ -1,34 +1,34 @@
 # pic-gen
 
-**AI 图片生成与提示词优化工具** — 一个 Skill，支持通义万相、Banana (Flux)、DALL-E 3 多模型。
+**AI Image Generation & Prompt Optimizer** — An OpenClaw Skill that supports multiple image generation models including Qwen Wanxiang (通义万相), Banana (Flux), and DALL-E 3.
 
-## 功能
+## Features
 
-- ✨ **提示词优化**：输入简单描述，自动生成各平台最优提示词
-- 🎨 **多模型支持**：通义万相、Banana/Flux、DALL-E 3，一个 Skill 搞定
-- 🔑 **密钥管理**：对话中直接发送 API Key，自动写入配置
-- 💬 **对话式交互**：像和产品经理对话一样，一步一步引导生成
-- 📋 **格式覆盖**：Midjourney / Stable Diffusion / Flux / DALL-E / 通义万相
+- ✨ **Prompt Optimization**: Convert simple descriptions into professional-grade prompts for any platform
+- 🎨 **Multi-Model Support**: Qwen Wanxiang, Banana/Flux, DALL-E 3 — one Skill to rule them all
+- 🔑 **API Key Management**: Send API keys directly in chat, auto-saved to config
+- 💬 **Conversational Interface**: Step-by-step guidance like talking to a product manager
+- 📋 **Format Coverage**: Midjourney / Stable Diffusion / Flux / DALL-E / Qwen Wanxiang
 
-## 支持平台
+## Supported Platforms
 
-| 模型 | 平台 | 说明 |
+| Model | ID | Description |
 |---|---|---|
-| 通义万相 | `qwen` | 阿里云 DashScope API，默认模型 |
-| Banana / Flux | `banana` | 开源 Flux 模型 |
+| Qwen Wanxiang | `qwen` | Alibaba Cloud DashScope API, default |
+| Banana / Flux | `banana` | Open-source Flux models |
 | DALL-E 3 | `dalle` | OpenAI API |
 
-## 快速开始
+## Quick Start
 
-### 1. 安装 Skill
+### 1. Install
 
 ```bash
 clawhub install pic-gen
 ```
 
-### 2. 配置 API Key
+### 2. Configure API Key
 
-**方式 A**：手动编辑 `pic-gen/config/models.yaml`：
+**Option A**: Edit `pic-gen/config/models.yaml` manually:
 
 ```yaml
 default: qwen
@@ -39,9 +39,9 @@ models:
     model: "qwen-image-2.0-pro"
 ```
 
-**方式 B**：在对话中直接发送 API Key，Bot 自动写入配置。
+**Option B**: Send the key directly in chat — the Bot writes it to config automatically.
 
-**方式 C**：使用环境变量（推荐，不会在配置文件中留下 Key）：
+**Option C**: Use environment variables (recommended — keeps keys out of config files):
 
 ```bash
 export DASHSCOPE_API_KEY="sk-xxxxxxxx"
@@ -49,96 +49,110 @@ export BANANA_API_KEY="your-banana-key"
 export OPENAI_API_KEY="sk-xxxxxxxx"
 ```
 
-### ⚠️ API Key 安全提示
+### 3. Start Using
 
-- **不要**把包含真实 Key 的配置文件提交到 GitHub
-- `config/models.yaml` 已在 `.gitignore` 中，提交前确保 api_key 字段为空
-- Key 泄露后立即到平台控制台重新生成
-
-### 3. 开始使用
-
-在支持 OpenClaw 的聊天界面（如 Discord），直接说：
+In any OpenClaw-enabled chat (Discord, etc.):
 
 ```
-画一只在月球上弹吉他的猫
+Draw a cat on the moon
 ```
 
-Bot 会：
-1. 优化提示词（多平台版本展示）
-2. 询问用哪个模型（或使用默认）
-3. 生成图片
+Bot will:
+1. Optimize the prompt (multi-platform versions shown)
+2. Ask which model to use (or use default)
+3. Generate and return the image
 
-## 命令示例
-
-```
-# 直接生成（用默认模型）
-画一个赛博朋克城市
-
-# 指定模型
-用 banana 生成 梵高风格的向日葵
-
-# 优化已有提示词
-优化这个提示词：a beautiful sunset
-
-# 切换默认模型
-设置默认模型为 dalle
-
-# 更新 API Key
-更新通义 key 为 sk-xxxxx
-```
-
-## 目录结构
+## Project Structure
 
 ```
 pic-gen/
-├── SKILL.md                  # Skill 定义文件（AI 读取）
+├── SKILL.md                  # Skill definition (AI reads this)
 ├── config/
-│   └── models.yaml           # 模型配置（API Key 在此）
+│   └── models.yaml           # Model config (API keys here)
 ├── scripts/
-│   ├── optimize.py           # 提示词优化核心
-│   ├── generate_qwen.py      # 通义万相生成器
-│   ├── generate_banana.py    # Banana/Flux 生成器
-│   ├── generate_dalle.py     # DALL-E 生成器
-│   └── update_config.py      # 配置管理工具
+│   ├── optimize.py           # Core prompt optimizer
+│   ├── generate_qwen.py      # Qwen Wanxiang generator
+│   ├── generate_banana.py   # Banana/Flux generator
+│   ├── generate_dalle.py    # DALL-E generator
+│   └── update_config.py      # Config management tool
 └── references/
-    ├── midjourney.md         # MJ 格式参考
-    ├── stable-diffusion.md   # SD 格式参考
-    ├── flux.md               # Flux 格式参考
-    └── dalle.md              # DALL-E 格式参考
+    ├── midjourney.md         # MJ format guide
+    ├── stable-diffusion.md   # SD format guide
+    ├── flux.md              # Flux format guide
+    └── dalle.md            # DALL-E format guide
 ```
 
-## 提示词优化原理
+## Prompt Optimization Strategy
 
-输入简单描述后，Skill 自动补全以下维度：
+### Scene-Aware Lighting
 
-| 维度 | 示例 |
-|---|---|
-| 主体细节 | 「猫」→「橘猫，坐姿，眯眼打盹」 |
-| 场景背景 | 「在户外」→「京都寺庙庭院，春日午后」 |
-| 风格 | 「好看」→「宫崎骏动画风格」 |
-| 光影 | 「亮」→「逆光，金色边缘光」 |
-| 构图 | 「拍猫」→「低角度平视，浅景深」 |
-| 技术参数 | 平台专属参数 |
+Automatically matches lighting/mood to your scene:
 
-## 开发
+| Scene | Qwen Wanxiang | Midjourney |
+|---|---|---|
+| Rainy night | rain beams, wet texture, neon reflections | neon reflections on wet streets |
+| Cyberpunk | neon lights, cyber effects, cold tones | neon + cyberpunk atmosphere |
+| Night / stars | moonlight, starburst, deep night sky | neon + night atmosphere |
+| Sunrise / sunset | golden hour, warm tones, soft backlight | golden hour + warm tones |
+| Forest / nature | natural light, dappled light, fresh vibe | natural sunlight + dappled |
+| Cafe / interior | natural + soft light, cozy | warm interior + cozy |
+
+### Artist Style Detection
+
+| Style | Qwen Wanxiang Boost | Midjourney Boost |
+|---|---|---|
+| Van Gogh / oil painting | bold colors, brushstroke texture | Van Gogh inspired, bold brushstrokes |
+| Ghibli / anime | anime style, soft tones, Ghibli lighting | Studio Ghibli, dreamy atmosphere |
+| Pixar / 3D cartoon | 3D animation, Pixar texture | Pixar 3D animation style |
+
+### Example Output
+
+**Input**: "Van Gogh-style sunflower field"
+
+```
+🎨 Midjourney:
+"Van Gogh-style sunflower field, cinematic photography, shot on Canon EOS R5,
+post-impressionist art style, Van Gogh inspired, bold colors,
+visible brushstrokes, --ar 16:9 --s 400 --v 6"
+
+🖼️ DALL-E 3:
+"Van Gogh 风格的向日葵花田, vivid colors, high detail,
+professional photography, highly detailed, perfect composition"
+
+⚡ Qwen Wanxiang:
+"梵高风格的向日葵花田，细节丰富，高品质，浓烈色彩，笔触感，后印象派风格，厚涂感"
+```
+
+## ⚠️ API Key Security
+
+- **Never** share config files containing real API keys on GitHub, Discord, or any public channel
+- `config/models.yaml` is gitignored — make sure api_key fields are empty before committing
+- If a key is leaked, regenerate it immediately in the platform console
+
+## Dev Commands
 
 ```bash
-# 优化提示词（本地测试）
-python3 pic-gen/scripts/optimize.py -i "一只猫" -p all
+# Optimize prompt (local test)
+python3 pic-gen/scripts/optimize.py -i "a cat" -p all
 
-# 生成图片
-python3 pic-gen/scripts/generate_qwen.py -p "一只猫" --download -o ./output
+# Generate image
+python3 pic-gen/scripts/generate_qwen.py -p "a cat" --download -o ./output
 
-# 配置管理
+# Config management
 python3 pic-gen/scripts/update_config.py show
 python3 pic-gen/scripts/update_config.py set-key qwen your-key
 ```
 
-## 发布到 ClawHub
+## Publish to ClawHub
 
 ```bash
 clawhub publish ./pic-gen --slug pic-gen --name "pic-gen" --version 1.0.0
 ```
+
+## Links
+
+- **GitHub**: https://github.com/AoturLab/pic-gen
+- **ClawHub**: https://clawhub.com/skills/pic-gen
 
 ## License
 
