@@ -28,7 +28,7 @@ clawhub install pic-gen
 
 ### 2. 配置 API Key
 
-**方式 A**：手动编辑 `config/models.yaml`：
+**方式 A**：手动编辑 `pic-gen/config/models.yaml`：
 
 ```yaml
 default: qwen
@@ -40,6 +40,20 @@ models:
 ```
 
 **方式 B**：在对话中直接发送 API Key，Bot 自动写入配置。
+
+**方式 C**：使用环境变量（推荐，不会在配置文件中留下 Key）：
+
+```bash
+export DASHSCOPE_API_KEY="sk-xxxxxxxx"
+export BANANA_API_KEY="your-banana-key"
+export OPENAI_API_KEY="sk-xxxxxxxx"
+```
+
+### ⚠️ API Key 安全提示
+
+- **不要**把包含真实 Key 的配置文件提交到 GitHub
+- `config/models.yaml` 已在 `.gitignore` 中，提交前确保 api_key 字段为空
+- Key 泄露后立即到平台控制台重新生成
 
 ### 3. 开始使用
 

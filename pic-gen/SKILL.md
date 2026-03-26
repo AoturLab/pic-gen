@@ -44,13 +44,18 @@ Bot：「好的！想用什么模型生成？」
   ↓
 用户：「1」
   ↓
-Bot 检测到 config 里没有 API key
-  「请提供你的 DashScope API Key（可用于通义万相）：」
+Bot 检测到 config 里没有 API key，询问用户：
+  「请提供你的 DashScope API Key」
+
+  同时告知用户也可以手动配置：
+  「💡 也可以手动配置：编辑 pic-gen/config/models.yaml，填入 api_key 字段。
+   ⚠️ 注意：不要把包含真实 Key 的配置文件分享给他人。」
+
   ↓
 用户：「sk-xxxxxxxx」
   ↓
 Bot 写入 config/models.yaml，并回复：
-  「Key 已保存！正在生成…」
+  「✅ Key 已保存！正在生成…」
   ↓
 Bot 优化提示词 → 生成图片 → 返回
 ```
@@ -131,26 +136,69 @@ pic-gen/
 
 ## 配置管理（config/models.yaml）
 
+### API Key 安全说明 ⚠️
+
+**API Key = 你的账号密码，禁止泄露或分享。**
+
+- **不要**把包含真实 Key 的配置文件发到 GitHub、Discord、群聊等任何公开或 semi-public 地方
+- 提交到 GitHub 前，确保 `config/models.yaml` 中 api_key 字段为空或使用环境变量
+- 建议使用环境变量方式引用 Key，而非直接写在 yaml 里：
+
+```yaml
+# 方式一：直接填写（仅本地使用，不提交到 Git）
+models:
+  qwen:
+    api_key: "sk-xxxxxxxx"
+
+# 方式二：留空，通过环境变量注入（推荐）
+models:
+  qwen:
+    api_key: ""
+```
+
+```bash
+# 运行前设置环境变量
+export DASHSCOPE_API_KEY="sk-xxxxxxxx"
+export BANANA_API_KEY="your-banana-key"
+export OPENAI_API_KEY="sk-xxxxxxxx"
+```
+
+### 配置文件位置
+
+```
+pic-gen/config/models.yaml
+```
+
+用户可通过以下任一方式配置：
+
+| 方式 | 说明 |
+|---|---|
+| **对话提供** | 直接发送 Key 给 Bot，Bot 自动写入配置文件 |
+| **手动编辑** | 编辑 `config/models.yaml`，填入 api_key |
+| **环境变量** | 设置 `DASHSCOPE_API_KEY` / `BANANA_API_KEY` / `OPENAI_API_KEY` |
+
+### 配置文件格式
+
 ```yaml
 default: qwen
 
 models:
   qwen:
     enabled: true
-    api_key: ""          # 用户首次设置
+    api_key: ""          # 填写你的 DashScope API Key
     model: "qwen-image-2.0-pro"
     default_size: "1024*1024"
     default_style: "auto"
 
   banana:
     enabled: false
-    api_key: ""
+    api_key: ""          # 填写你的 Banana API Key
     model: "flux-dev"
     default_size: "1024*1024"
 
   dalle:
     enabled: false
-    api_key: ""
+    api_key: ""          # 填写你的 OpenAI API Key
     model: "dall-e-3"
     default_size: "1024*1024"
 ```
