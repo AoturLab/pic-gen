@@ -23,12 +23,24 @@
 ### 1. Install
 
 ```bash
+# Install the skill
 clawhub install pic-gen
+
+# Install Python dependencies (required before first use)
+pip install -r pic-gen/requirements.txt
 ```
 
 ### 2. Configure API Key
 
-**Option A**: Edit `pic-gen/config/models.yaml` manually:
+**Option A (Recommended)**: Use environment variables — keys never touch the config file:
+
+```bash
+export DASHSCOPE_API_KEY="sk-xxxxxxxx"
+export BANANA_API_KEY="your-banana-key"
+export OPENAI_API_KEY="sk-xxxxxxxx"
+```
+
+**Option B**: Edit `pic-gen/config/models.yaml` manually:
 
 ```yaml
 default: qwen
@@ -39,9 +51,9 @@ models:
     model: "qwen-image-2.0-pro"
 ```
 
-**Option B**: Send the key directly in chat — the Bot writes it to config automatically.
+**Option C**: Send the key directly in chat — the Bot writes it to config automatically.
 
-**Option C**: Use environment variables (recommended — keeps keys out of config files):
+> [!warning] Plaintext config: If you use Options B or C, `config/models.yaml` will contain your API key in plaintext. Make sure the file is never committed to version control (it is gitignored by default).
 
 ```bash
 export DASHSCOPE_API_KEY="sk-xxxxxxxx"

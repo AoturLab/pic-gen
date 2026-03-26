@@ -1,6 +1,10 @@
 ---
 name: pic-gen
 description: Tired of getting mediocre AI images? This skill solves the problem: you describe what you want in plain language, and pic-gen (1) picks the best model for your scene, and (2) rewrites your description into professional-grade prompts that actually produce stunning results. Supports Qwen Wanxiang, Banana/Flux, DALL-E 3 — or just the prompt output if you prefer your own pipeline. Trigger: "draw a...", "generate image of...", "optimize this prompt", "AI art".
+requires:
+  python:
+    packages: ["requests", "pyyaml", "banana-dev"]
+  bins: []
 ---
 
 # pic-gen — AI 图片生成与提示词优化
