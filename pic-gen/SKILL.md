@@ -1,6 +1,6 @@
 ---
 name: pic-gen
-description: AI 图片生成与提示词优化工具。支持通义万相、Banana (Flux)、DALL-E 等多模型。用于：根据用户简单描述生成高质量图片提示词、优化已有提示词、直接调用配置好的模型出图。触发场景：「生成图片」「画一个 XXX」「优化这个提示词」「设置 API key」「切换模型」。用户可直接发送密钥给 bot，自动写入配置文件。
+description: Tired of getting mediocre AI images? This skill solves the problem: you describe what you want in plain language, and pic-gen (1) picks the best model for your scene, and (2) rewrites your description into professional-grade prompts that actually produce stunning results. Supports Qwen Wanxiang, Banana/Flux, DALL-E 3 — or just the prompt output if you prefer your own pipeline. Trigger: "draw a...", "generate image of...", "optimize this prompt", "AI art".
 ---
 
 # pic-gen — AI 图片生成与提示词优化
