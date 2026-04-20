@@ -11,6 +11,13 @@ import time
 import yaml
 import requests
 
+try:
+    import banana_dev as banana
+    BANANA_SDK_AVAILABLE = True
+except ImportError:
+    BANANA_SDK_AVAILABLE = False
+    banana = None
+
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 SKILL_DIR = os.path.dirname(SCRIPT_DIR)
 CONFIG_PATH = os.path.join(SKILL_DIR, "config", "models.yaml")
@@ -38,6 +45,8 @@ def generate_image(prompt: str, api_key: str = None, model_key: str = None,
     """
     if not api_key:
         return {"error": "Banana API Key 未设置，请在 config/models.yaml 中配置 banana.api_key"}
+    if not BANANA_SDK_AVAILABLE:
+        return {"error": "banana-dev 未安装，请运行: pip install banana-dev"}
     if not model_key:
         return {"error": "Banana Model Key 未设置，请在 config/models.yaml 中配置 banana.model_key"}
 
@@ -94,7 +103,8 @@ def generate_image(prompt: str, api_key: str = None, model_key: str = None,
 def wait_for_completion(call_id: str, api_key: str, download: bool, output: str,
                         max_wait: int = 180) -> dict:
     """轮询 Banana 查询结果"""
-    import banana_dev as banana  # pip install banana-dev
+    if not BANANA_SDK_AVAILABLE:
+        return {"error": "banana-dev 未安装，请运行: pip install banana-dev"}
 
     start_time = time.time()
     while time.time() - start_time < max_wait:
@@ -165,7 +175,11 @@ def main():
     banana_cfg = config.get("models", {}).get("banana", {})
 
     api_key = args.api_key or get_api_key(config) or banana_cfg.get("api_key")
-    model_key = args.model_key or os.environ.get("BANANA_MODEL_KEY", "flux-dev")
+    model_key = (
+        args.model_key
+        or os.environ.get("BANANA_MODEL_KEY")
+        or banana_cfg.get("model_key", "flux-dev")
+    )
 
     result = generate_image(
         prompt=args.prompt,

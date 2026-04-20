@@ -1,0 +1,31 @@
+# pic-gen 模型配置
+# 支持平台：qwen（通义万相）、banana（Flux）、dalle（DALL-E 3）
+#
+# 使用方式（任选一）：
+#   1. 环境变量（推荐）：export DASHSCOPE_API_KEY="sk-xxx"
+#   2. 直接填入下方 api_key 字段（仅本地使用，不要提交到 Git）
+#
+# 注意：api_key 为空时脚本会自动从环境变量读取
+
+default: qwen
+
+models:
+  qwen:
+    enabled: true
+    api_key: ""              # 填入 DashScope API Key，或设置 DASHSCOPE_API_KEY 环境变量
+    model: "qwen-image-2.0-pro"
+    default_size: "1024*1024"
+    default_style: "auto"
+
+  banana:
+    enabled: false
+    api_key: ""              # 填入 Banana API Key，或设置 BANANA_API_KEY 环境变量
+    model: "flux-dev"
+    model_key: ""            # Banana 平台上的模型部署 Key，设置 BANANA_MODEL_KEY 环境变量
+    default_size: "1024*1024"
+
+  dalle:
+    enabled: false
+    api_key: ""              # 填入 OpenAI API Key，或设置 OPENAI_API_KEY 环境变量
+    model: "dall-e-3"
+    default_size: "1024x1024"

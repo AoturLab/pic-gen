@@ -6,6 +6,7 @@ pic-gen: 配置管理脚本
 
 import argparse
 import os
+import shutil
 import sys
 import yaml
 
@@ -13,6 +14,8 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 SKILL_DIR = os.path.dirname(SCRIPT_DIR)
 CONFIG_PATH = os.path.join(SKILL_DIR, "config", "models.yaml")
 CONFIG_TEMPLATE = os.path.join(SKILL_DIR, "config", "models.yaml.template")
+
+import shutil  # for init_config template copy
 
 
 def load_config() -> dict:
@@ -23,39 +26,32 @@ def load_config() -> dict:
 
 
 def save_config(config: dict):
-    with open(CONFIG_PATH, "w", encoding="utf-8") as f:
+    """原子写入配置文件（先写临时文件再 rename）"""
+    tmp_path = CONFIG_PATH + ".tmp"
+    with open(tmp_path, "w", encoding="utf-8") as f:
         yaml.dump(config, f, allow_unicode=True, default_flow_style=False, sort_keys=False)
+    os.replace(tmp_path, CONFIG_PATH)
 
 
 def init_config():
-    """初始化配置文件"""
+    """初始化配置文件（从模板复制）"""
     if not os.path.exists(CONFIG_PATH):
-        config = {
-            "default": "qwen",
-            "models": {
-                "qwen": {
-                    "enabled": True,
-                    "api_key": "",
-                    "model": "qwen-image-2.0-pro",
-                    "default_size": "1024*1024",
-                    "default_style": "auto"
-                },
-                "banana": {
-                    "enabled": False,
-                    "api_key": "",
-                    "model": "flux-dev",
-                    "default_size": "1024*1024"
-                },
-                "dalle": {
-                    "enabled": False,
-                    "api_key": "",
-                    "model": "dall-e-3",
-                    "default_size": "1024*1024"
+        if os.path.exists(CONFIG_TEMPLATE):
+            shutil.copy2(CONFIG_TEMPLATE, CONFIG_PATH)
+            print(f"✅ 配置文件已创建: {CONFIG_PATH}")
+        else:
+            # 模板不存在时回退到内嵌方式
+            config = {
+                "default": "qwen",
+                "models": {
+                    "qwen": {"enabled": True, "api_key": "", "model": "qwen-image-2.0-pro",
+                              "default_size": "1024*1024", "default_style": "auto"},
+                    "banana": {"enabled": False, "api_key": "", "model": "flux-dev", "default_size": "1024*1024"},
+                    "dalle": {"enabled": False, "api_key": "", "model": "dall-e-3", "default_size": "1024x1024"},
                 }
             }
-        }
-        save_config(config)
-        print(f"✅ 配置文件已创建: {CONFIG_PATH}")
+            save_config(config)
+            print(f"✅ 配置文件已创建: {CONFIG_PATH}")
     else:
         print(f"配置文件已存在: {CONFIG_PATH}")
 
